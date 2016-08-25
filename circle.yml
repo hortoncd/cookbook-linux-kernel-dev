@@ -1,0 +1,7 @@
+dependencies:
+  bundler:
+    without: [integration]
+test:
+  override:
+    # we don't really care about issues or source URLs
+    - bundle exec foodcritic . -X test -f any --tags ~FC064 --tags ~FC065
