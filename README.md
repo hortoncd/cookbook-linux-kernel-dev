@@ -3,6 +3,8 @@ Cookbook Name
 
 linux-kernel-dev
 
+[![CircleCI](https://circleci.com/gh/hortoncd/cookbook-linux-kernel-dev.svg?style=svg)](https://circleci.com/gh/hortoncd/cookbook-linux-kernel-dev)
+
 Description
 ===========
 
