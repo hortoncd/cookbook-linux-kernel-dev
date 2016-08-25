@@ -44,7 +44,7 @@ Installs required packages and sets up the environment.  The repo is mounted fro
 Usage
 =====
 
-Add the `linux_kernel_dev` cookbook to the runlist.
+Add the `linux-kernel-dev` cookbook to the runlist.
 
 License and Author
 ==================
