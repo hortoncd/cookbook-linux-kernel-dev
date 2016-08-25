@@ -1,0 +1,56 @@
+---
+driver:
+  name: vagrant
+  <%= "http_proxy: http://#{ENV['LOCALPROXY']}" if ENV['LOCALPROXY'] %>
+  <%= "https_proxy: http://#{ENV['LOCALPROXY']}" if ENV['LOCALPROXY'] %>
+driver_config:
+  require_chef_omnibus: true
+
+#provisioner:
+#  name: chef_zero
+
+# Uncomment the following verifier to leverage Inspec instead of Busser (the
+# default verifier)
+# verifier:
+#   name: inspec
+
+platforms:
+- name: ubuntu-14.04
+  driver_config:
+    box: opscode-ubuntu-14.04
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-14.04_chef-provisionerless.box
+  run_list:
+  - recipe[apt]
+- name: ubuntu-12.04
+  driver_config:
+    box: opscode-ubuntu-12.04
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_ubuntu-12.04_chef-provisionerless.box
+  run_list:
+  - recipe[apt]
+- name: centos-7.2
+  driver_config:
+    box: opscode-centos-7.2
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_centos-7.2_chef-provisionerless.box
+  run_list:
+  - recipe[yum]
+- name: centos-6.4
+  driver_config:
+    box: opscode-centos-6.4
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_centos-6.4_provisionerless.box
+  run_list:
+  - recipe[yum]
+- name: debian-7.1.0
+  driver_config:
+    box: opscode-debian-7.1.0
+    box_url: https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_debian-7.1.0_provisionerless.box
+  run_list:
+  - recipe[apt]
+
+suites:
+- name: default
+  run_list:
+  - recipe[linux-kernel-dev]
+  attributes: {
+    "linux-kernel-dev": {
+    }
+  }
