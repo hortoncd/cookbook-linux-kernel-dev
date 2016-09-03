@@ -20,45 +20,48 @@
 require 'spec_helper'
 
 describe 'linux-kernel-dev::default' do
-  context 'When all attributes are default, on a ubuntu platform' do
-    let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'ubuntu', version: '14.04').converge(described_recipe) }
+  versions = %w{12.04 14.04}
+  versions.each do |v|
+    context 'When all attributes are default, on a ubuntu platform' do
+      let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'ubuntu', version: v).converge(described_recipe) }
 
-    it 'converges successfully' do
-      expect { chef_run }.to_not raise_error
-    end
-
-    # debian family specific
-    %w{ exuberant-ctags }.each do |p|
-      it "installs #{p}" do
-        expect(chef_run).to install_package(p)
+      it 'converges successfully' do
+        expect { chef_run }.to_not raise_error
       end
-    end
 
-    # redhat family specific
-    it 'sets up yum-epel' do
-      expect(chef_run).to_not include_recipe('yum-epel')
-    end
-
-    # redhat family specific
-    %w{ ctags }.each do |p|
-      it "installs #{p}" do
-        expect(chef_run).to_not install_package(p)
+      # debian family specific
+      %w{ exuberant-ctags }.each do |p|
+        it "installs #{p}" do
+          expect(chef_run).to install_package(p)
+        end
       end
-    end
 
-    %w{ mutt esmtp git git-email vim }.each do |p|
-      it "installs #{p}" do
-        expect(chef_run).to install_package(p)
+      # redhat family specific
+      it 'does not use yum-epel recipe' do
+        expect(chef_run).to_not include_recipe('yum-epel')
       end
-    end
 
-    it 'sets up bash vimode' do
-      expect(chef_run).to create_file('/etc/profile.d/01vimode.sh').with(
-        content: 'set -o vi',
-        user:    'root',
-        group:   'root',
-        mode:    '644',
-      )
+      # redhat family specific
+      %w{ ctags }.each do |p|
+        it "does not install #{p}" do
+          expect(chef_run).to_not install_package(p)
+        end
+      end
+
+      %w{ mutt esmtp git git-email vim }.each do |p|
+        it "installs #{p}" do
+          expect(chef_run).to install_package(p)
+        end
+      end
+
+      it 'sets up bash vimode' do
+        expect(chef_run).to create_file('/etc/profile.d/01vimode.sh').with(
+          content: 'set -o vi',
+          user:    'root',
+          group:   'root',
+          mode:    '644',
+        )
+      end
     end
   end
 end
@@ -79,13 +82,13 @@ describe 'linux-kernel-dev::default' do
     end
 
     # rhel family specific
-    it 'sets up yum-epel' do
+    it 'does not use yum-epel recipe' do
       expect(chef_run).to_not include_recipe('yum-epel')
     end
 
     # redhat family specific
     %w{ ctags }.each do |p|
-      it "installs #{p}" do
+      it "does not install #{p}" do
         expect(chef_run).to_not install_package(p)
       end
     end
@@ -117,7 +120,7 @@ describe 'linux-kernel-dev::default' do
 
     # debian family specific
     %w{ exuberant-ctags }.each do |p|
-      it "installs #{p}" do
+      it "does not install #{p}" do
         expect(chef_run).to_not install_package(p)
       end
     end
@@ -147,6 +150,61 @@ describe 'linux-kernel-dev::default' do
         group:   'root',
         mode:    '644',
       )
+    end
+  end
+end
+
+describe 'linux-kernel-dev::default' do
+  #versions = %w{10.10, 10.11.1}
+  versions = %w{10.11.1}
+  versions.each do |v|
+    context 'When all attributes are default, on a Mac OS X platform' do
+      let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'mac_os_x', version: v).converge(described_recipe) }
+
+      it 'converges successfully' do
+        expect { chef_run }.to_not raise_error
+      end
+
+      # redhat family specific
+      it 'does not use yum-epel recipe' do
+        expect(chef_run).to_not include_recipe('yum-epel')
+      end
+
+      # debian family specific
+      %w{ exuberant-ctags }.each do |p|
+        it "does not install #{p}" do
+          expect(chef_run).to_not install_package(p)
+        end
+      end
+
+      # not needed on OS X
+      %w{ vim git-email }.each do |p|
+        it "does not install #{p}" do
+          expect(chef_run).to_not install_package(p)
+        end
+      end
+
+      # OS X specific
+      %w{ macvim }.each do |p|
+        it "installs #{p}" do
+          expect(chef_run).to install_package(p)
+        end
+      end
+
+      %w{ ctags mutt esmtp git }.each do |p|
+        it "installs #{p}" do
+          expect(chef_run).to install_package(p)
+        end
+      end
+
+      it 'sets up bash vimode' do
+        expect(chef_run).to create_file('/etc/profile.d/01vimode.sh').with(
+          content: 'set -o vi',
+          user:    'root',
+          group:   'root',
+          mode:    '644',
+        )
+      end
     end
   end
 end

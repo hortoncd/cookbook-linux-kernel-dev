@@ -21,7 +21,7 @@ include_recipe 'build-essential'
 
 case node['platform_family']
 when 'debian'
-  %w{ exuberant-ctags }.each do |p|
+  %w{ exuberant-ctags git-email vim }.each do |p|
     package p
   end
 when 'rhel'
@@ -34,12 +34,16 @@ when 'rhel'
 
   include_recipe 'yum-epel'
 
-  %w{ ctags }.each do |p|
+  %w{ ctags git-email vim }.each do |p|
+    package p
+  end
+when 'mac_os_x'
+  %w{ ctags macvim }.each do |p|
     package p
   end
 end
 
-%w{ mutt esmtp git git-email vim }.each do |p|
+%w{ mutt esmtp git }.each do |p|
     package p
 end
 
