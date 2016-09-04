@@ -57,7 +57,7 @@ end
     case node[:macosx][:package_provider]
     when "macports"
       macports_package p
-    en
+    end
   else
     package p
   end
