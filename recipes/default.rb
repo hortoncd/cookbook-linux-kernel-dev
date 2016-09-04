@@ -39,7 +39,12 @@ when 'rhel'
   end
 when 'mac_os_x'
   %w{ ctags macvim msmtp offlineimap }.each do |p|
-    package p
+    case node[:macosx][:package_provider]
+    when "macports"
+      macports_package p
+    else
+      package p
+    end
   end
 end
 
@@ -47,12 +52,30 @@ end
 # instead/in addition to brew
 #%w{ mutt esmtp git }.each do |p|
 %w{ mutt git }.each do |p|
+  case node['platform_family']
+  when 'mac_os_x'
+    case node[:macosx][:package_provider]
+    when "macports"
+      macports_package p
+    en
+  else
     package p
+  end
 end
 
-file '/etc/profile.d/01vimode.sh' do
-  owner 'root'
-  group 'root'
-  mode '644'
-  content 'set -o vi'
+case node['platform_family']
+when 'mac_os_x'
+#  file '/etc/profile.d/01vimode.sh' do
+#    owner 'root'
+#    group 'root'
+#    mode '644'
+#    content 'set -o vi'
+#  end
+else
+  file '/etc/profile.d/01vimode.sh' do
+    owner 'root'
+    group 'root'
+    mode '644'
+    content 'set -o vi'
+  end
 end
