@@ -21,7 +21,7 @@ include_recipe 'build-essential'
 
 case node['platform_family']
 when 'debian'
-  %w{ exuberant-ctags git-email vim }.each do |p|
+  %w{ esmtp exuberant-ctags git-email vim }.each do |p|
     package p
   end
 when 'rhel'
@@ -34,16 +34,19 @@ when 'rhel'
 
   include_recipe 'yum-epel'
 
-  %w{ ctags git-email vim }.each do |p|
+  %w{ ctags esmtp git-email vim }.each do |p|
     package p
   end
 when 'mac_os_x'
-  %w{ ctags macvim }.each do |p|
+  %w{ ctags macvim msmtp offlineimap }.each do |p|
     package p
   end
 end
 
-%w{ mutt esmtp git }.each do |p|
+# have to find esmtp replacement for mac os x, or go ahead with using ports 
+# instead/in addition to brew
+#%w{ mutt esmtp git }.each do |p|
+%w{ mutt git }.each do |p|
     package p
 end
 

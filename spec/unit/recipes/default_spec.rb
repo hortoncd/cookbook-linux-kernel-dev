@@ -184,20 +184,20 @@ describe 'linux-kernel-dev::default' do
       end
 
       # not needed on OS X
-      %w{ vim git-email }.each do |p|
+      %w{ vim esmtp git-email }.each do |p|
         it "does not install #{p}" do
           expect(chef_run).to_not install_package(p)
         end
       end
 
       # OS X specific
-      %w{ macvim }.each do |p|
+      %w{ macvim msmtp offlineimap }.each do |p|
         it "installs #{p}" do
           expect(chef_run).to install_package(p)
         end
       end
 
-      %w{ ctags mutt esmtp git }.each do |p|
+      %w{ ctags mutt git }.each do |p|
         it "installs #{p}" do
           expect(chef_run).to install_package(p)
         end
