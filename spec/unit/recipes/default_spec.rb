@@ -67,89 +67,95 @@ describe 'linux-kernel-dev::default' do
 end
 
 describe 'linux-kernel-dev::default' do
-  context 'When all attributes are default, on a debian platform' do
-    let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'debian', version: '7.1').converge(described_recipe) }
+  versions = %w{7.9 8.5}
+  versions.each do |v|
+    context 'When all attributes are default, on a debian platform' do
+      let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'debian', version: v).converge(described_recipe) }
 
-    it 'converges successfully' do
-      expect { chef_run }.to_not raise_error
-    end
-
-    # debian family specific
-    %w{ exuberant-ctags vim }.each do |p|
-      it "installs #{p}" do
-        expect(chef_run).to install_package(p)
+      it 'converges successfully' do
+        expect { chef_run }.to_not raise_error
       end
-    end
 
-    # rhel family specific
-    it 'does not use yum-epel recipe' do
-      expect(chef_run).to_not include_recipe('yum-epel')
-    end
-
-    # redhat family specific
-    %w{ ctags }.each do |p|
-      it "does not install #{p}" do
-        expect(chef_run).to_not install_package(p)
+      # debian family specific
+      %w{ exuberant-ctags vim }.each do |p|
+        it "installs #{p}" do
+          expect(chef_run).to install_package(p)
+        end
       end
-    end
 
-    %w{ mutt esmtp git git-email vim }.each do |p|
-      it "installs #{p}" do
-        expect(chef_run).to install_package(p)
+      # rhel family specific
+      it 'does not use yum-epel recipe' do
+        expect(chef_run).to_not include_recipe('yum-epel')
       end
-    end
 
-    it 'sets up bash vimode' do
-      expect(chef_run).to create_file('/etc/profile.d/01vimode.sh').with(
-        content: 'set -o vi',
-        user:    'root',
-        group:   'root',
-        mode:    '644',
-      )
+      # redhat family specific
+      %w{ ctags }.each do |p|
+        it "does not install #{p}" do
+          expect(chef_run).to_not install_package(p)
+        end
+      end
+
+      %w{ mutt esmtp git git-email vim }.each do |p|
+        it "installs #{p}" do
+          expect(chef_run).to install_package(p)
+        end
+      end
+
+      it 'sets up bash vimode' do
+        expect(chef_run).to create_file('/etc/profile.d/01vimode.sh').with(
+          content: 'set -o vi',
+          user:    'root',
+          group:   'root',
+          mode:    '644',
+        )
+      end
     end
   end
 end
 
 describe 'linux-kernel-dev::default' do
-  context 'When all attributes are default, on a centos platform' do
-    let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'centos', version: '6.4').converge(described_recipe) }
+  versions = %w{6.8 7.2}
+  versions.each do |v|
+    context 'When all attributes are default, on a centos platform' do
+      let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'centos', version: '6.4').converge(described_recipe) }
 
-    it 'converges successfully' do
-      expect { chef_run }.to_not raise_error
-    end
-
-    # debian family specific
-    %w{ exuberant-ctags }.each do |p|
-      it "does not install #{p}" do
-        expect(chef_run).to_not install_package(p)
+      it 'converges successfully' do
+        expect { chef_run }.to_not raise_error
       end
-    end
 
-    # redhat family specific
-    it 'sets up yum-epel' do
-      expect(chef_run).to include_recipe('yum-epel')
-    end
-
-    # redhat family specific
-    %w{ ctags }.each do |p|
-      it "installs #{p}" do
-        expect(chef_run).to install_package(p)
+      # debian family specific
+      %w{ exuberant-ctags }.each do |p|
+        it "does not install #{p}" do
+          expect(chef_run).to_not install_package(p)
+        end
       end
-    end
 
-    %w{ mutt esmtp git git-email vim }.each do |p|
-      it "installs #{p}" do
-        expect(chef_run).to install_package(p)
+      # redhat family specific
+      it 'sets up yum-epel' do
+        expect(chef_run).to include_recipe('yum-epel')
       end
-    end
 
-    it 'sets up bash vimode' do
-      expect(chef_run).to create_file('/etc/profile.d/01vimode.sh').with(
-        content: 'set -o vi',
-        user:    'root',
-        group:   'root',
-        mode:    '644',
-      )
+      # redhat family specific
+      %w{ ctags }.each do |p|
+        it "installs #{p}" do
+          expect(chef_run).to install_package(p)
+        end
+      end
+
+      %w{ mutt esmtp git git-email vim }.each do |p|
+        it "installs #{p}" do
+          expect(chef_run).to install_package(p)
+        end
+      end
+
+      it 'sets up bash vimode' do
+        expect(chef_run).to create_file('/etc/profile.d/01vimode.sh').with(
+          content: 'set -o vi',
+          user:    'root',
+          group:   'root',
+          mode:    '644',
+        )
+      end
     end
   end
 end
