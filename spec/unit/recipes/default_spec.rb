@@ -117,7 +117,7 @@ describe 'linux-kernel-dev::default' do
   versions = %w{6.8 7.2}
   versions.each do |v|
     context 'When all attributes are default, on a centos platform' do
-      let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'centos', version: '6.4').converge(described_recipe) }
+      let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'centos', version: v).converge(described_recipe) }
 
       it 'converges successfully' do
         expect { chef_run }.to_not raise_error
@@ -196,6 +196,7 @@ describe 'linux-kernel-dev::default' do
       %w{ macvim msmtp offlineimap }.each do |p|
         it "installs #{p}" do
           expect(chef_run).to install_macports_package(p)
+          expect(chef_run).to_not install_package(p)
         end
       end
 
@@ -206,7 +207,7 @@ describe 'linux-kernel-dev::default' do
       end
 
       it 'sets up bash vimode' do
-        expect(chef_run).to create_file('/etc/profile.d/01vimode.sh').with(
+        expect(chef_run).to_not create_file('/etc/profile.d/01vimode.sh').with(
           content: 'set -o vi',
           user:    'root',
           group:   'root',

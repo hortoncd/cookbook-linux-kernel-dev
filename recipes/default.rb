@@ -39,7 +39,7 @@ when 'rhel'
   end
 when 'mac_os_x'
   %w{ ctags macvim msmtp offlineimap }.each do |p|
-    case node[:macosx][:package_provider]
+    case node['macosx']['package_provider']
     when "macports"
       macports_package p
     else
@@ -54,7 +54,7 @@ end
 %w{ mutt git }.each do |p|
   case node['platform_family']
   when 'mac_os_x'
-    case node[:macosx][:package_provider]
+    case node['macosx']['package_provider']
     when "macports"
       macports_package p
     end
