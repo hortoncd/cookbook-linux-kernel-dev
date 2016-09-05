@@ -6,7 +6,7 @@ description      'Installs/Configures assorted packages required for linux kerne
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 source_url       'https://github.com/hortoncd/cookbook-linux-kernel-dev'
 issues_url       'https://github.com/hortoncd/cookbook-linux-kernel-dev/issues'
-version          '0.1.0'
+version          '0.1.1'
 
 supports 'debian'
 supports 'ubuntu'

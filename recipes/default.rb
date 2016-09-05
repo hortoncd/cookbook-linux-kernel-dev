@@ -21,7 +21,7 @@ include_recipe 'build-essential'
 
 case node['platform_family']
 when 'debian'
-  %w{ exuberant-ctags }.each do |p|
+  %w{ esmtp exuberant-ctags git-email vim }.each do |p|
     package p
   end
 when 'rhel'
@@ -34,18 +34,48 @@ when 'rhel'
 
   include_recipe 'yum-epel'
 
-  %w{ ctags }.each do |p|
+  %w{ ctags esmtp git-email vim }.each do |p|
+    package p
+  end
+when 'mac_os_x'
+  %w{ ctags macvim msmtp offlineimap }.each do |p|
+    case node['macosx']['package_provider']
+    when "macports"
+      macports_package p
+    else
+      package p
+    end
+  end
+end
+
+# have to find esmtp replacement for mac os x, or go ahead with using ports 
+# instead/in addition to brew
+#%w{ mutt esmtp git }.each do |p|
+%w{ mutt git }.each do |p|
+  case node['platform_family']
+  when 'mac_os_x'
+    case node['macosx']['package_provider']
+    when "macports"
+      macports_package p
+    end
+  else
     package p
   end
 end
 
-%w{ mutt esmtp git git-email vim }.each do |p|
-    package p
-end
-
-file '/etc/profile.d/01vimode.sh' do
-  owner 'root'
-  group 'root'
-  mode '644'
-  content 'set -o vi'
+case node['platform_family']
+when 'mac_os_x'
+#  file '/etc/profile.d/01vimode.sh' do
+#    owner 'root'
+#    group 'root'
+#    mode '644'
+#    content 'set -o vi'
+#  end
+else
+  file '/etc/profile.d/01vimode.sh' do
+    owner 'root'
+    group 'root'
+    mode '644'
+    content 'set -o vi'
+  end
 end
