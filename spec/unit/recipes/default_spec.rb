@@ -180,6 +180,7 @@ describe 'linux-kernel-dev::default' do
       %w{ exuberant-ctags }.each do |p|
         it "does not install #{p}" do
           expect(chef_run).to_not install_package(p)
+          expect(chef_run).to_not install_macports_package(p)
         end
       end
 
@@ -187,19 +188,20 @@ describe 'linux-kernel-dev::default' do
       %w{ vim esmtp git-email }.each do |p|
         it "does not install #{p}" do
           expect(chef_run).to_not install_package(p)
+          expect(chef_run).to_not install_macports_package(p)
         end
       end
 
       # OS X specific
       %w{ macvim msmtp offlineimap }.each do |p|
         it "installs #{p}" do
-          expect(chef_run).to install_package(p)
+          expect(chef_run).to install_macports_package(p)
         end
       end
 
       %w{ ctags mutt git }.each do |p|
         it "installs #{p}" do
-          expect(chef_run).to install_package(p)
+          expect(chef_run).to install_macports_package(p)
         end
       end
 
