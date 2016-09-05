@@ -114,7 +114,7 @@ describe 'linux-kernel-dev::default' do
 end
 
 describe 'linux-kernel-dev::default' do
-  versions = %w{6.8 7.2}
+  versions = %w{6.8 7.0}
   versions.each do |v|
     context 'When all attributes are default, on a centos platform' do
       let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'centos', version: v).converge(described_recipe) }
